@@ -1,6 +1,6 @@
 {
   "name": "rusty-enums",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "TS implementation of Rust-like enums (e.g. Option<T>, Result<T, E>)",
   "main": "index.js",
   "scripts": {
