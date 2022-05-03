@@ -4,8 +4,8 @@
   "description": "TS implementation of Rust-like enums (e.g. Option<T>, Result<T, E>)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup src/index.ts --format cjs,esm --dts --minify -d lib"
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify -d lib",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,9 @@
   },
   "homepage": "https://github.com/Momijiichigo/RustyEnumTS#readme",
   "devDependencies": {
+    "@types/jest": "^27.5.0",
+    "jest": "^28.0.3",
+    "ts-jest": "^28.0.0",
     "tsup": "^5.12.6",
     "typescript": "^4.6.4"
   }
