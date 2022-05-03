@@ -16,6 +16,7 @@
     "Option",
     "Result"
   ],
+  "files": ["lib/"],
   "author": "",
   "license": "MIT",
   "bugs": {
