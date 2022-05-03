@@ -1,0 +1,29 @@
+{
+  "name": "rusty-enums",
+  "version": "1.0.0",
+  "description": "TS implementation of Rust-like enums (e.g. Option<T>, Result<T, E>)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify -d lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Momijiichigo/RustyEnumTS.git"
+  },
+  "keywords": [
+    "typescript",
+    "Option",
+    "Result"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Momijiichigo/RustyEnumTS/issues"
+  },
+  "homepage": "https://github.com/Momijiichigo/RustyEnumTS#readme",
+  "devDependencies": {
+    "tsup": "^5.12.6",
+    "typescript": "^4.6.4"
+  }
+}
