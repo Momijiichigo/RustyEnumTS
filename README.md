@@ -5,30 +5,6 @@ TS implementation of Rust-like enums (e.g. Option&lt;T>, Result&lt;T, E>)
 Just like in rust, this makes you able to use enums with custom values.
 It works with Typescript.
 
-## Provided Classes
-
-Available methods for Enum:
-- match
-- if_let
-
-Available `Result<T, E>` methods:
-- unwrap
-- expect
-- unwrap_or
-- unwrap_or_else
-- ok
-- is_ok
-- is_err
-
-Available `Option<T>` methods:
-- unwrap
-- expect
-- unwrap_or
-- unwrap_or_else
-- ok_or
-- is_some
-- is_none
-
 ## Usage
 
 ```ts
@@ -54,15 +30,15 @@ const num = hello.success.match({
 // convert Result<T, E> to Option<T>
 
 const r1: Result<number, string> = Ok(45)
-const o1 = r.ok() // o: Option<number>
+const o1 = r1.ok() //  type: `Option<number>`
 
 // convert Option<T> to Result<T, E>
 
-const r1: Option<string> = Some(3)
-const o1 = r.ok_or('r1 is none') // o: Result<number, string>
+const o2: Option<number> = Some(3)
+const r2 = o2.ok_or('o2 is none') // type: `Result<number, string>`
 ```
 
-## Define your own Enum
+### Define your own Enum
 
 `EnumBase` class is provided.
 
@@ -83,3 +59,27 @@ myEnum.match({
 })
 
 ```
+
+## Available Features
+
+Available methods for Enum:
+- match
+- if_let
+
+Available `Result<T, E>` methods:
+- unwrap
+- expect
+- unwrap_or
+- unwrap_or_else
+- ok
+- is_ok
+- is_err
+
+Available `Option<T>` methods:
+- unwrap
+- expect
+- unwrap_or
+- unwrap_or_else
+- ok_or
+- is_some
+- is_none
