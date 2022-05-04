@@ -1,9 +1,22 @@
 # Rust-like Enums in TS
 
-TS implementation of Rust-like enums (e.g. Option&lt;T>, Result&lt;T, E>)
+TS implementation of Rust-like enums (e.g. `Option<T>`, `Result<T, E>`)
 
 Just like in rust, this makes you able to use enums with custom values.
 It works with Typescript.
+## Installation
+
+For Node:
+
+```sh
+npm i rusty-enums
+```
+
+For Deno:
+
+```ts
+import { /* imports you use */ } from 'https://cdn.skypack.dev/rusty-enums?dts'
+```
 
 ## Provided Classes
 
