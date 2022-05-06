@@ -21,7 +21,7 @@ import { /* imports you use */ } from 'https://cdn.skypack.dev/rusty-enums?dts'
 ## Usage
 
 ```ts
-import { Result, Ok, Err, Option, Some, None } from './index.ts'
+import { Result, Ok, Err, Option, Some, None } from 'rusty-enums'
 
 const hello = {} as {
     dessert: Option<string>,
