@@ -62,11 +62,9 @@ export class EnumBase<M> {
   }
   /**
    * ```ts
-   * if (
-   *   r1.if_let('Ok', (value)=>{
+   * if (r1.let('Ok', (value)=>{
    *     // when r1 is Ok
-   *   })
-   * ) {
+   * })) {
    *   // do things such as `break`, `continue`, `return`
    * } else {
    *   // when r1 is not Ok
@@ -75,7 +73,7 @@ export class EnumBase<M> {
    * @param v_name variant name
    * @returns `true` if variant matches. `false` otherwise.
    */
-  if_let<Variant extends keyof M>(v_name: Variant, then: (value: M[Variant]) => void): boolean {
+  let<Variant extends keyof M>(v_name: Variant, then: (value: M[Variant]) => void): boolean {
     if (this.variant === v_name) {
       then(this.data as M[Variant])
       return true
@@ -83,29 +81,47 @@ export class EnumBase<M> {
     return false
   }
 }
-type EnumConsturctor<M> = { new(...args: any[]): EnumBase<M> };
-
-type EnumWithVariantFuncs<M, C extends EnumConsturctor<M>> = C & {
-  [variantName in keyof M]: <T>(
-    data: T
-  ) => C
-}
-
-export function variants<M>(
-  ...variantNames: (keyof M)[]
-) {
-  return function <T extends EnumConsturctor<M>>(BaseClass: T) {
-    const NC = class extends BaseClass { };
-    for (const variant of variantNames) {
-      Object.defineProperty(NC, variant, {
-        value(store: M[typeof variant]) {
-          return new NC(variant, store)
-        },
-      })
-    }
-    return NC as EnumWithVariantFuncs<M, T>
-  }
-}
+// type EnumConsturctor<M> = { new(...args: any[]): EnumBase<M> };
+// 
+// type EnumWithVariantFuncs<M, C extends EnumConsturctor<M>> = C & {
+//   [variantName in keyof M]: <T>(
+//     data: T
+//   ) => C
+// }
+// 
+// export function variants<M>(
+//   ...variantNames: (keyof M)[]
+// ) {
+//   return function <T extends EnumConsturctor<M>>(BaseClass: T) {
+//     const NC = class extends BaseClass { };
+//     for (const variant of variantNames) {
+//       Object.defineProperty(NC, variant, {
+//         value(store: M[typeof variant]) {
+//           return new NC(variant, store)
+//         },
+//       })
+//     }
+//     return NC as EnumWithVariantFuncs<M, T>
+//   }
+// }
+// 
+// function v_test<M>(
+//   ...variantNames: (keyof M)[]
+// ) {
+//   return function <T extends EnumConsturctor<M>>(baseClass: T, context: ClassDecoratorContext) {
+//     for (const variant of variantNames) {
+//       Object.defineProperty(baseClass, variant, {
+//         value: (store: M[typeof variant]) => new baseClass(variant, store),
+//       })
+//     }
+//     return baseClass as EnumWithVariantFuncs<M, T>
+//   } as ClassDecorator
+// }
+// 
+// @v_test('A', 'B')
+// class TestEnum<T> extends EnumBase<{ A: T, B: T }> {
+// 
+// }
 
 /**
  * `Result` is a type that represents either success `Ok` or failure `Err`.
@@ -178,7 +194,7 @@ export class Result<T, E> extends EnumBase<{ Ok: T, Err: E }> {
     if (this.variant === 'Ok') {
       return Some(this.data as T)
     }
-    return None
+    return None()
   }
   /**
    * Returns `true` if the result is `Ok`
@@ -218,12 +234,14 @@ export class Option<T> extends EnumBase<{ Some: T, None: undefined }> {
     return new Option<NT>("Some", data)
   }
   /** No value. */
-  static None = new Option<any>("None", undefined)
+  static None() {
+    return new Option<any>("None", undefined)
+  }
   /**
    * Returns the contained `Some` value or computes it from a closure.
    */
   unwrap_or_else(back: () => T): T {
-    if (this === None) {
+    if (this.variant === "None") {
       return back()
     }
     return this.data as T
@@ -259,7 +277,7 @@ export class Option<T> extends EnumBase<{ Some: T, None: undefined }> {
    * ```
    */
   unwrap_or(value: T): T {
-    if (this === None) {
+    if (this.variant === "None") {
       return value
     }
     return this.data as T
@@ -270,16 +288,91 @@ export class Option<T> extends EnumBase<{ Some: T, None: undefined }> {
    * mapping `Some(v)` to `Ok(v)` and `None` to `Err(err)`.
    */
   ok_or<E>(err: E): Result<T, E> {
-    if (this === None) {
+    if (this.variant === "None") {
       return Err(err)
     }
     return Ok(this.data as T)
   }
   /**
+   * Inserts `value` into the option, then returns the `value`.
+   *
+   * If the option already contains a value, the old value is dropped.
+   *
+   * See also {@link get_or_insert}, which doesn't update the value if
+   * the option already contains `Some`.
+   *
+   * #### Example
+   *
+   * ```ts
+   * let opt = None();
+   * let val = opt.insert(1);
+   * val === 1
+   * opt.unwrap() === 1
+   *
+   * let opt2 = None();
+   * let val2 = opt2.insert({a: 2});
+   * val2.a === 2
+   * val2.a = 3
+   * opt2.unwrap() === 3
+   * ```
+   */
+  insert(value: T): T {
+    this.data = value
+    this.variant = "Some"
+    return value
+  }
+  /**
+   * Inserts `value` into the option if it is `None`, then
+   * returns the contained value.
+   *
+   * See also {@link Option.insert}, which updates the value even if
+   * the option already contains `Some`.
+   *
+   * #### Examples
+   *
+   * ```ts
+   * let x = None();
+   * let y = x.get_or_insert(5);
+   * y === 5
+   *
+   * let z = x.get_or_insert(2);
+   * z === 5
+   * ```
+   */
+  get_or_insert(value: T): T {
+    if (this.variant === "None") {
+      this.data = value
+      this.variant = "Some"
+    }
+    return this.data as T
+  }
+  /**
+   * Inserts a value computed from `f` into the option if it is `None`,
+   * then returns the contained value.
+   *
+   * #### Examples
+   *
+   * ```ts
+   * let x = None();
+   * let y = x.get_or_insert_with(() => 5);
+   * y === 5
+   *
+   * let z = x.get_or_insert_with(() => 2);
+   * z === 5
+   * ```
+   */
+  get_or_insert_with(f: () => T): T {
+    if (this.variant === "None") {
+      this.data = f()
+      this.variant = "Some"
+    }
+    return this.data as T
+  }
+  /**
    * Returns `true` if the option is `None`
    */
   is_none() {
-    return this === None
+    return this.variant === "None"
   }
   /**
    * Returns `true` if the option is `Some`

@@ -36,7 +36,7 @@ test('Option', () => {
             None: () => 18
         })
     ).toBe(msg.length)
-    o = None
+    o = None()
     expect(()=>o.unwrap()).toThrow()
     expect(o.unwrap_or_else(() => 'ohh')).toBe('ohh')
     expect(o.unwrap_or('yay')).toBe('yay')
