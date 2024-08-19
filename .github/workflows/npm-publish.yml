@@ -23,19 +23,8 @@ jobs:
       - run: npm ci
       - run: npm run test
       - run: npm run build
-      - name: update version
-        run: |
-          git config --global user.name 'Momijiichigo'
-          git config --global user.email 'Momijiichigo@users.noreply.github.com'
-          git fetch
-          npm version ${{ github.ref_name }}
-          git add .
-          git commit -am "Automated report"
-          git branch temp-branch
-          git checkout main
-          git merge temp-branch
-          git push origin main
-          git push
+      - name: Update version in package.json
+        uses: maks-stupak/gh-action-bump-version@v7.1.5
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
