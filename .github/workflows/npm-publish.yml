@@ -30,6 +30,10 @@ jobs:
           npm version ${{ github.ref_name }}
           git add .
           git commit -am "Automated report"
+          git branch temp-branch
+          git checkout master
+          git merge temp-branch
+          git push origin master
           git push
       - run: npm publish
         env:
