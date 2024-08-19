@@ -28,6 +28,7 @@ jobs:
           git config --global user.name 'Momijiichigo'
           git config --global user.email 'Momijiichigo@users.noreply.github.com'
           npm version ${{ github.ref_name }}
+          git add .
           git commit -am "Automated report"
           git push
       - run: npm publish
