@@ -1,13 +1,13 @@
 {
   "name": "rusty-enums",
-  "version": "2.0.0-alpha.0",
+  "version": "1.0.8",
   "description": "TS implementation of Rust-like enums (e.g. Option<T>, Result<T, E>)",
   "main": "./lib/index.js",
   "module": "./lib/index.mjs",
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --minify -d lib",
-    "docs": "typedoc src/index.ts",
+    "docs": "typedoc --out docs src",
     "test": "jest"
   },
   "repository": {
