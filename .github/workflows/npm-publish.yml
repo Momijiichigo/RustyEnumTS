@@ -27,6 +27,7 @@ jobs:
         run: |
           git config --global user.name 'Momijiichigo'
           git config --global user.email 'Momijiichigo@users.noreply.github.com'
+          git fetch
           npm version ${{ github.ref_name }}
           git add .
           git commit -am "Automated report"
