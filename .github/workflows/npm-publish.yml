@@ -31,9 +31,9 @@ jobs:
           git add .
           git commit -am "Automated report"
           git branch temp-branch
-          git checkout master
+          git checkout main
           git merge temp-branch
-          git push origin master
+          git push origin main
           git push
       - run: npm publish
         env:
