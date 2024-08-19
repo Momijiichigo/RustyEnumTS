@@ -25,9 +25,9 @@ jobs:
       - run: npm run build
       - name: update version
         run: |
-          npm version ${{ github.ref }}
-          git config --global user.name 'Your Name'
-          git config --global user.email 'your-username@users.noreply.github.com'
+          npm version ${{ GITHUB_REF_NAME }}
+          git config --global user.name 'Momijiichigo'
+          git config --global user.email 'Momijiichigo@users.noreply.github.com'
           git commit -am "Automated report"
           git push
       - run: npm publish
