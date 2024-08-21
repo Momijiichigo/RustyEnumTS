@@ -23,21 +23,22 @@ import { /* imports you use */ } from 'https://cdn.skypack.dev/rusty-enums?dts'
 ```ts
 import { Result, Ok, Err, Option, Some, None } from 'rusty-enums'
 
-const hello = {} as {
+const hello: {
     dessert: Option<string>,
     success: Result<number, Error>
+} = {
+    dessert: Some('Pudding'), // You can do `Option.Some('Pudding')` as well
+    success: Ok(34)
 }
-hello.dessert = Some('Pudding')
 
 console.log(
       "I will eat some "+
       hello.dessert.unwrap_or('Apple') // if `hello.dessert` is `None`, 'Apple' will be returned.
 )
 
-hello.success = Ok(34)  // You can do `Result.Ok(34)` as well
 const num = hello.success.match({
     Ok: (value) => value * 3,
-    _: () => 0  // You can choose to abbreviate several variants
+    _: () => 0  // You can choose to abbreviate variants
 })
 
 // convert Result<T, E> to Option<T>
@@ -94,5 +95,8 @@ Available `Option<T>` methods:
 - unwrap_or
 - unwrap_or_else
 - ok_or
+- insert
+- get_or_insert
+- get_or_insert_with
 - is_some
 - is_none
